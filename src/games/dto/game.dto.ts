@@ -1,21 +1,17 @@
 import { IsString, ValidateNested, IsArray } from 'class-validator';
 import { Type } from 'class-transformer';
-
-export class UserDto {
-  _id: string;
-  name: string;
-}
+import { PlayerDto } from './player.dto';
 
 export class CreateGameDto {
   @IsString()
   description: string;
 
   @ValidateNested()
-  @Type(() => UserDto)
-  owner: UserDto;
+  @Type(() => PlayerDto)
+  owner: PlayerDto;
 
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => UserDto)
-  players: UserDto[];
+  @Type(() => PlayerDto)
+  players: PlayerDto[];
 }

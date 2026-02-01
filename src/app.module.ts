@@ -4,12 +4,18 @@ import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { GamesModule } from './games/games.module';
 
+import { ConfigModule, ConfigService } from '@nestjs/config';
+
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+
     MongooseModule.forRootAsync({
-      useFactory: () => ({
-        uri: 'mongodb+srv://gavriljukrs_db_user:W8QY9vkytCZW5bKk@spaceduel.ubbonxf.mongodb.net/?appName=SpaceDuel',
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        uri: configService.get<string>('MONGODB_URI'),
       }),
+      inject: [ConfigService],
     }),
     GamesModule,
   ],
