@@ -1,8 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
 import { PlayerDto } from '../dto/player.dto';
+import { HydratedDocument } from 'mongoose';
+import { IPlayerGameState } from '../types/game.types';
+import { ICardBase } from 'src/cards/types/cards.types';
 
-export type GameDocument = Game & Document;
+export type GameStatus = 'waiting' | 'active' | 'finished';
+
+export type GameDocument = HydratedDocument<Game>;
 
 @Schema({ timestamps: true })
 export class Game {
@@ -13,7 +17,44 @@ export class Game {
   owner: PlayerDto;
 
   @Prop({ type: [Object], default: [] })
-  players: PlayerDto[];
+  players: IPlayerGameState[];
+
+  @Prop({ required: true, default: 0 })
+  currentPlayer: 0 | 1;
+
+  @Prop({ required: true, default: 1 })
+  turn: number;
+
+  @Prop({ type: [Object], default: [] })
+  deck: ICardBase[];
+
+  @Prop({ type: [Object], default: [] })
+  discardPile: ICardBase[];
+
+  @Prop({ default: 'waiting' })
+  status: GameStatus;
+
+  @Prop({ type: String, default: null })
+  winnerId?: string | null;
+
+  @Prop({ type: Date, default: null })
+  finishedAt?: Date | null;
+
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export const GameSchema = SchemaFactory.createForClass(Game);
+
+// ✅ Virtual поле "id" как string, для фронтенда и TS
+GameSchema.virtual('id').get(function () {
+  return this._id.toString();
+});
+
+// чтобы virtual отображалось при конвертации в JSON
+GameSchema.set('toJSON', {
+  virtuals: true,
+});
+GameSchema.set('toObject', {
+  virtuals: true,
+});

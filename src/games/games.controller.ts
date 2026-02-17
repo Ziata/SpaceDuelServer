@@ -6,6 +6,8 @@ import {
   Delete,
   Param,
   Body,
+  Query,
+  NotFoundException,
 } from '@nestjs/common';
 import { GamesService } from './games.service';
 import { Game } from './schemas/game.schema';
@@ -22,7 +24,7 @@ export class GamesController {
 
   @Get()
   findAll() {
-    return this.gamesService.findAll();
+    return this.gamesService.findAllActive();
   }
 
   @Get(':id')
@@ -38,5 +40,15 @@ export class GamesController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.gamesService.remove(id);
+  }
+
+  @Get(':id/active')
+  async getActiveGame(
+    @Param('id') id: string,
+    @Query('userId') userId?: string,
+  ) {
+    const game = await this.gamesService.findOne(id);
+    if (!game) throw new NotFoundException('Game not found');
+    return this.gamesService.serializeGameForPlayer(game, userId);
   }
 }
