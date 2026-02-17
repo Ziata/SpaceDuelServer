@@ -1,6 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { ICard, ICardBase } from './types/cards.types';
-import { cards } from './cards.registry';
+import { nanomaterialsCards } from './registry/nanomaterials/nanomaterials.cards';
+import { psiEnergyCards } from './registry/psiEnergy/psiEnergy.cards';
+import { dronesCards } from './registry/drones/drones.cards';
+
+const cards: ICard[] = [
+  ...nanomaterialsCards,
+  ...psiEnergyCards,
+  ...dronesCards,
+];
 
 @Injectable()
 export class CardRegistry {
