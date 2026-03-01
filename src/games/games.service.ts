@@ -4,7 +4,10 @@ import { Model } from 'mongoose';
 import { Game, GameDocument } from './schemas/game.schema';
 import { CreateGameDto } from './dto/game.dto';
 import { PlayerDto } from './dto/player.dto';
-import { initializePlayersFromIds } from './utils/game-initialize';
+import {
+  initializePlayersFromIds,
+  shuffleArray,
+} from './utils/game-initialize';
 import { IPlayerGameState, IPlayerPublicState } from './types/game.types';
 import { CardRegistry } from 'src/cards/cards-registry.service';
 import { checkVictory } from './utils/check-victory';
@@ -107,7 +110,6 @@ export class GamesService {
   }
 
   async playCard(gameId: string, playerId: string, cardId: string) {
-    console.log('PLAY');
     try {
       // 1️⃣ Получаем игру из базы
       const game = await this.gameModel.findById(gameId);
@@ -124,6 +126,24 @@ export class GamesService {
       const card = this.cardRegistry.getCard(cardId);
       if (!card) return { error: 'Card not found' };
 
+      // добавляем на поле
+      if (
+        !game.activeCards.length ||
+        game.activeCards[0].playerId !== playerId
+      ) {
+        game.activeCards = [
+          {
+            ...card,
+            isDiscard: false,
+            playerId,
+          },
+        ];
+      } else {
+        game.activeCards = [
+          ...game.activeCards,
+          { ...card, isDiscard: false, playerId },
+        ];
+      }
       const player = game.players[playerIndex];
 
       // 5️⃣ Проверяем хватает ли ресурсов
@@ -149,7 +169,6 @@ export class GamesService {
       game.players = newGameState.players;
       game.currentPlayer = newGameState.currentPlayer;
       game.turn = newGameState.turn;
-
       // -------------------------------------------------
       // 8️⃣ Начисляем production игроку,
       // который только что сходил
@@ -181,6 +200,12 @@ export class GamesService {
         updatedPlayer.hand.push(newCard);
       }
 
+      // проверяемразмер колоды и возвращаем отбой если нужно
+      if (game.deck.length === 0) {
+        game.deck = shuffleArray(game.discardPile);
+        game.discardPile = [];
+      }
+
       // Проверка победы
       const winnerId = checkVictory(game);
       if (winnerId) {
@@ -204,7 +229,6 @@ export class GamesService {
   }
 
   async discardCard(gameId: string, playerId: string, cardId: string) {
-    console.log('DISCARD');
     try {
       // 1️⃣ Получаем игру из базы данных
       const game = await this.gameModel.findById(gameId);
@@ -220,6 +244,25 @@ export class GamesService {
       // 4️⃣ Получаем карту из реестра (чтобы корректно положить в сброс)
       const card = this.cardRegistry.getCard(cardId);
       if (!card) return { error: 'Card not found' };
+
+      // добавляем на поле
+      if (
+        !game.activeCards.length ||
+        game.activeCards[0].playerId !== playerId
+      ) {
+        game.activeCards = [
+          {
+            ...card,
+            isDiscard: true,
+            playerId,
+          },
+        ];
+      } else {
+        game.activeCards = [
+          ...game.activeCards,
+          { ...card, isDiscard: true, playerId },
+        ];
+      }
 
       // 5️⃣ Увеличиваем номер хода
       game.turn += 1;
@@ -273,6 +316,12 @@ export class GamesService {
         game.status = 'finished';
         game.winnerId = winnerId;
         game.finishedAt = new Date();
+      }
+
+      // проверяемразмер колоды и возвращаем отбой если нужно
+      if (game.deck.length === 0) {
+        game.deck = shuffleArray(game.discardPile);
+        game.discardPile = [];
       }
 
       // -------------------------------------------------

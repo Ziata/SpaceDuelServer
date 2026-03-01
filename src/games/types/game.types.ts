@@ -26,6 +26,7 @@ export interface IActiveGame {
   opponent?: IPlayerPublicState;
   requestedUserId?: string;
   deck: ICardBase[];
+  activeCards: ICardBase[];
 }
 
 export interface IFullActiveGame {
@@ -37,6 +38,7 @@ export interface IFullActiveGame {
   turn: number;
   players: IPlayerGameState[];
   deck: ICardBase[];
+  activeCards: ICardBase[];
 }
 
 export interface IUser {

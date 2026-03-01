@@ -12,8 +12,10 @@ import { PlayerDto } from './dto/player.dto';
 
 @WebSocketGateway({
   cors: {
-    origin: '*',
+    origin: 'https://peppy-churros-7f85d4.netlify.app',
+    credentials: true,
   },
+  transports: ['websocket'],
 })
 export class GamesGateway {
   @WebSocketServer()

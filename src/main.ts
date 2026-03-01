@@ -1,11 +1,19 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { IoAdapter } from '@nestjs/platform-socket.io';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.enableCors();
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+
+  app.enableCors({
+    origin: ['https://peppy-churros-7f85d4.netlify.app'],
+    credentials: true,
+  });
+
+  app.useWebSocketAdapter(new IoAdapter(app));
+
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

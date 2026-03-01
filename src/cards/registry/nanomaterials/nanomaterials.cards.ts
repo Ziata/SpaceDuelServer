@@ -50,7 +50,7 @@ export const nanomaterialsCards: ICard[] = [
     name: 'Seismic Shock',
     type: 'nanomaterials',
     cost: 0,
-    description: '-1 mine for all players.',
+    description: '-1 nanomaterial/turn all players.',
     effect: seismicShock,
   },
   {
@@ -58,15 +58,15 @@ export const nanomaterialsCards: ICard[] = [
     name: 'Asteroid Collapse',
     type: 'nanomaterials',
     cost: 0,
-    description: '-1 enemy mine, +10 planet integrity, +5 energy.',
+    description: '-1 nanomaterial/turn, +10 integrity, +5 psi.',
     effect: asteroidCollapse,
   },
   {
     id: 'nm_004',
-    name: 'Quantum Coin',
+    name: 'Lucky Pulsar',
     type: 'nanomaterials',
     cost: 0,
-    description: '+2 nanomaterials, +2 energy, play again.',
+    description: '+2 nanomaterials, +2 psi energy, play again.',
     effect: quantumCoin,
   },
   {
@@ -74,7 +74,7 @@ export const nanomaterialsCards: ICard[] = [
     name: 'Terra Core',
     type: 'nanomaterials',
     cost: 1,
-    description: '+1 planet integrity, play again.',
+    description: '+1 integrity. Play again.',
     effect: terraCore,
   },
   {
@@ -82,7 +82,7 @@ export const nanomaterialsCards: ICard[] = [
     name: 'Mineral Garden',
     type: 'nanomaterials',
     cost: 1,
-    description: '+1 planet integrity, +1 tower, +2 drones.',
+    description: '+1 integrity, +1 shield, +2 drones.',
     effect: mineralGarden,
   },
   {
@@ -90,7 +90,7 @@ export const nanomaterialsCards: ICard[] = [
     name: 'Orbital Innovation',
     type: 'nanomaterials',
     cost: 2,
-    description: '+1 mine all players, +4 energy.',
+    description: '+1 nanomaterial/turn all, +4 psi energy.',
     effect: orbitalInnovation,
   },
   {
@@ -106,7 +106,7 @@ export const nanomaterialsCards: ICard[] = [
     name: 'Overtime Shield',
     type: 'nanomaterials',
     cost: 2,
-    description: '+5 planet integrity, lose 6 energy.',
+    description: '+5 integrity, lose 6 psi energy.',
     effect: overtimeShield,
   },
   {
@@ -122,7 +122,7 @@ export const nanomaterialsCards: ICard[] = [
     name: 'Foundation Array',
     type: 'nanomaterials',
     cost: 3,
-    description: 'If planet integrity=0, +5 integrity, else +3 integrity.',
+    description: '+5 integrity if integrity = 0, else +3',
     effect: foundationArray,
   },
   {
@@ -130,7 +130,7 @@ export const nanomaterialsCards: ICard[] = [
     name: 'Orbital Mines',
     type: 'nanomaterials',
     cost: 3,
-    description: '+1 mine.',
+    description: '+1 nanomaterial/turn.',
     effect: orbitalMines,
   },
   {
@@ -138,7 +138,7 @@ export const nanomaterialsCards: ICard[] = [
     name: 'Asteroid Vein',
     type: 'nanomaterials',
     cost: 4,
-    description: '+2 mine if less than enemy, else +1.',
+    description: '+2 nanomaterial if < enemy; else +1.',
     effect: asteroidVein,
   },
   {
@@ -146,7 +146,7 @@ export const nanomaterialsCards: ICard[] = [
     name: 'Mine Collapse',
     type: 'nanomaterials',
     cost: 4,
-    description: '-1 enemy mine.',
+    description: '-1 enemy nanomaterial/turn.',
     effect: mineCollapse,
   },
   {
@@ -154,7 +154,7 @@ export const nanomaterialsCards: ICard[] = [
     name: 'Tech Hijack',
     type: 'nanomaterials',
     cost: 5,
-    description: 'Set your mines equal to enemy if lower.',
+    description: 'Set your nanomaterial/turn = enemy if lower.',
     effect: techHijack,
   },
   {
@@ -162,7 +162,7 @@ export const nanomaterialsCards: ICard[] = [
     name: 'Reinforced Plating',
     type: 'nanomaterials',
     cost: 5,
-    description: '+6 planet integrity.',
+    description: '+6 shield.',
     effect: reinforcedPlating,
   },
   {
@@ -170,7 +170,7 @@ export const nanomaterialsCards: ICard[] = [
     name: 'Subterranean Streams',
     type: 'nanomaterials',
     cost: 6,
-    description: 'If weaker, lose 1 barrack, +2 tower.',
+    description: 'Lower shield: -1 drone/turn, -2 integrity.',
     effect: subterraneanStreams,
   },
   {
@@ -178,7 +178,7 @@ export const nanomaterialsCards: ICard[] = [
     name: 'Orbital Drill',
     type: 'nanomaterials',
     cost: 6,
-    description: '+2 mines.',
+    description: '+2 nanomaterial/turn.',
     effect: orbitalDrill,
   },
   {
@@ -186,7 +186,7 @@ export const nanomaterialsCards: ICard[] = [
     name: 'Cosmic Excavator',
     type: 'nanomaterials',
     cost: 7,
-    description: '+4 integrity, +1 mine.',
+    description: '+4 integrity, +1 nanomaterial/turn.',
     effect: cosmicExcavator,
   },
   {
@@ -202,7 +202,7 @@ export const nanomaterialsCards: ICard[] = [
     name: 'Shockwave',
     type: 'nanomaterials',
     cost: 7,
-    description: 'All planets lose 5 integrity, play again.',
+    description: 'All lose 5 integrity. Play again.',
     effect: shockwave,
   },
   {
@@ -210,7 +210,7 @@ export const nanomaterialsCards: ICard[] = [
     name: 'Grand Shield',
     type: 'nanomaterials',
     cost: 8,
-    description: '+8 planet integrity.',
+    description: '+8 shield.',
     effect: grandShield,
   },
   {
@@ -218,7 +218,7 @@ export const nanomaterialsCards: ICard[] = [
     name: 'Hidden Cavity',
     type: 'nanomaterials',
     cost: 8,
-    description: '+1 energy, play again.',
+    description: '+1 psi/turn. Play again.',
     effect: hiddenCavity,
   },
   {
@@ -226,7 +226,7 @@ export const nanomaterialsCards: ICard[] = [
     name: 'Orbital Vault',
     type: 'nanomaterials',
     cost: 9,
-    description: '+5 integrity, +1 barrack.',
+    description: '+5 shield, +1 drone/turn.',
     effect: orbitalVault,
   },
   {
@@ -234,7 +234,7 @@ export const nanomaterialsCards: ICard[] = [
     name: 'Plasma Spire',
     type: 'nanomaterials',
     cost: 9,
-    description: '+7 integrity, +7 energy.',
+    description: '+7 integrity, +7 psi energy.',
     effect: plasmaSpire,
   },
   {
@@ -242,7 +242,7 @@ export const nanomaterialsCards: ICard[] = [
     name: 'Orbital Barricade',
     type: 'nanomaterials',
     cost: 10,
-    description: '+6 drones, +6 integrity, +1 barrack if less than enemy.',
+    description: '+6 drones, +6 integrity, +1 drone/turn if < enemy.',
     effect: orbitalBarricade,
   },
   {
@@ -250,7 +250,7 @@ export const nanomaterialsCards: ICard[] = [
     name: 'Stellar Core',
     type: 'nanomaterials',
     cost: 11,
-    description: '+6 integrity, +3 tower.',
+    description: '+3 integrity, +6 shield.',
     effect: stellarCore,
   },
   {
@@ -258,7 +258,7 @@ export const nanomaterialsCards: ICard[] = [
     name: 'Orbital Bastion',
     type: 'nanomaterials',
     cost: 13,
-    description: '+12 integrity.',
+    description: '+12 shield.',
     effect: orbitalBastion,
   },
   {
@@ -266,7 +266,7 @@ export const nanomaterialsCards: ICard[] = [
     name: 'Fortify Array',
     type: 'nanomaterials',
     cost: 14,
-    description: '+7 integrity, 6 damage to enemy.',
+    description: '+7 shield, 6 damage enemy.',
     effect: fortifyArray,
   },
   {
@@ -274,7 +274,7 @@ export const nanomaterialsCards: ICard[] = [
     name: 'New Frontiers',
     type: 'nanomaterials',
     cost: 15,
-    description: '+8 integrity, +5 tower.',
+    description: '+8 shield, +5 integrity.',
     effect: newFrontiers,
   },
   {
@@ -282,7 +282,7 @@ export const nanomaterialsCards: ICard[] = [
     name: 'Ultimate Shield',
     type: 'nanomaterials',
     cost: 16,
-    description: '+15 integrity.',
+    description: '+15 shield.',
     effect: ultimateShield,
   },
   {
@@ -290,7 +290,7 @@ export const nanomaterialsCards: ICard[] = [
     name: 'Field Swap',
     type: 'nanomaterials',
     cost: 17,
-    description: 'Swap your and enemy integrity.',
+    description: 'Swap your shield with enemy.',
     effect: fieldSwap,
   },
   {
@@ -298,7 +298,7 @@ export const nanomaterialsCards: ICard[] = [
     name: 'Orbital Cannon',
     type: 'nanomaterials',
     cost: 18,
-    description: '+6 integrity, 10 damage to enemy.',
+    description: '+6 shield, 10 damage enemy.',
     effect: orbitalCannon,
   },
   {
@@ -306,7 +306,7 @@ export const nanomaterialsCards: ICard[] = [
     name: 'Core Reactor',
     type: 'nanomaterials',
     cost: 24,
-    description: '+20 integrity, +8 energy.',
+    description: '+20 shield, +8 integrity.',
     effect: coreReactor,
   },
 ];

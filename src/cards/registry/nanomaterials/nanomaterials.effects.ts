@@ -1,4 +1,4 @@
-import { clonePlayers, endTurn } from 'src/cards/utils';
+import { clonePlayers, dealDamage, endTurn } from 'src/cards/utils';
 import { IFullActiveGame } from 'src/games/types/game.types';
 
 // =====================
@@ -28,7 +28,7 @@ export function seismicShock(
   players.forEach(
     (p) =>
       (p.resources.nanomaterials = Math.max(0, p.resources.nanomaterials - 1)),
-  ); // -1 шахта аналог
+  );
   endTurn(state);
   return { ...state, players };
 }
@@ -39,13 +39,12 @@ export function asteroidCollapse(
   playerIndex: number,
 ): IFullActiveGame {
   const players = clonePlayers(state);
-  const enemyIndex = playerIndex === 0 ? 1 : 0;
   players[playerIndex].planetIntegrity += 10;
-  players[playerIndex].resources.psiEnergy += 5; // аналог маны
-  players[enemyIndex].resources.nanomaterials = Math.max(
+  players[playerIndex].resources.psiEnergy += 5;
+  players[playerIndex].resources.nanomaterials = Math.max(
     0,
-    players[enemyIndex].resources.nanomaterials - 1,
-  ); // -1 шахта
+    players[playerIndex].resources.nanomaterials - 1,
+  );
   endTurn(state);
   return { ...state, players };
 }
@@ -58,7 +57,7 @@ export function quantumCoin(
   const players = clonePlayers(state);
   players[playerIndex].resources.nanomaterials += 2;
   players[playerIndex].resources.psiEnergy += 2;
-  state.turn += 1; // играем снова
+  state.turn += 1;
   return { ...state, players };
 }
 
@@ -69,7 +68,7 @@ export function terraCore(
 ): IFullActiveGame {
   const players = clonePlayers(state);
   players[playerIndex].planetIntegrity += 1;
-  state.turn += 1; // играем снова
+  state.turn += 1;
   return { ...state, players };
 }
 
@@ -80,7 +79,8 @@ export function mineralGarden(
 ): IFullActiveGame {
   const players = clonePlayers(state);
   players[playerIndex].planetIntegrity += 1;
-  players[playerIndex].resources.psiEnergy += 2;
+  players[playerIndex].orbitalShield += 2;
+  players[playerIndex].resources.drones += 2;
   endTurn(state);
   return { ...state, players };
 }
@@ -91,7 +91,7 @@ export function orbitalInnovation(
   playerIndex: number,
 ): IFullActiveGame {
   const players = clonePlayers(state);
-  players.forEach((p) => (p.resources.nanomaterials += 1));
+  players.forEach((p) => (p.production.nanomaterials += 1));
   players[playerIndex].resources.psiEnergy += 4;
   endTurn(state);
   return { ...state, players };
@@ -152,7 +152,7 @@ export function orbitalMines(
   playerIndex: number,
 ): IFullActiveGame {
   const players = clonePlayers(state);
-  players[playerIndex].resources.nanomaterials += 1;
+  players[playerIndex].production.nanomaterials += 1;
   endTurn(state);
   return { ...state, players };
 }
@@ -164,9 +164,9 @@ export function asteroidVein(
 ): IFullActiveGame {
   const players = clonePlayers(state);
   const enemyIndex = playerIndex === 0 ? 1 : 0;
-  players[playerIndex].resources.nanomaterials +=
-    players[playerIndex].resources.nanomaterials <
-    players[enemyIndex].resources.nanomaterials
+  players[playerIndex].production.nanomaterials +=
+    players[playerIndex].production.nanomaterials <
+    players[enemyIndex].production.nanomaterials
       ? 2
       : 1;
   endTurn(state);
@@ -180,9 +180,9 @@ export function mineCollapse(
 ): IFullActiveGame {
   const players = clonePlayers(state);
   const enemyIndex = playerIndex === 0 ? 1 : 0;
-  players[enemyIndex].resources.nanomaterials = Math.max(
+  players[enemyIndex].production.nanomaterials = Math.max(
     0,
-    players[enemyIndex].resources.nanomaterials - 1,
+    players[enemyIndex].production.nanomaterials - 1,
   );
   endTurn(state);
   return { ...state, players };
@@ -196,11 +196,11 @@ export function techHijack(
   const players = clonePlayers(state);
   const enemyIndex = playerIndex === 0 ? 1 : 0;
   if (
-    players[playerIndex].resources.nanomaterials <
-    players[enemyIndex].resources.nanomaterials
+    players[playerIndex].production.nanomaterials <
+    players[enemyIndex].production.nanomaterials
   ) {
-    players[playerIndex].resources.nanomaterials =
-      players[enemyIndex].resources.nanomaterials;
+    players[playerIndex].production.nanomaterials =
+      players[enemyIndex].production.nanomaterials;
   }
   endTurn(state);
   return { ...state, players };
@@ -212,7 +212,7 @@ export function reinforcedPlating(
   playerIndex: number,
 ): IFullActiveGame {
   const players = clonePlayers(state);
-  players[playerIndex].planetIntegrity += 6;
+  players[playerIndex].orbitalShield += 6;
   endTurn(state);
   return { ...state, players };
 }
@@ -220,15 +220,22 @@ export function reinforcedPlating(
 /* nm_017 */
 export function subterraneanStreams(
   state: IFullActiveGame,
-  playerIndex: number,
+  _: number,
 ): IFullActiveGame {
   const players = clonePlayers(state);
-  const enemyIndex = playerIndex === 0 ? 1 : 0;
-  if (
-    players[playerIndex].planetIntegrity < players[enemyIndex].planetIntegrity
-  ) {
-    players[playerIndex].planetIntegrity += 2;
-  }
+  const lowerShieldIndex =
+    players[0].orbitalShield < players[1].orbitalShield ? 0 : 1;
+
+  const player = players[lowerShieldIndex];
+
+  players[lowerShieldIndex] = {
+    ...player,
+    planetIntegrity: Math.max(0, player.planetIntegrity - 2),
+    production: {
+      ...player.production,
+      drones: Math.max(0, player.production.drones - 1),
+    },
+  };
   endTurn(state);
   return { ...state, players };
 }
@@ -239,7 +246,7 @@ export function orbitalDrill(
   playerIndex: number,
 ): IFullActiveGame {
   const players = clonePlayers(state);
-  players[playerIndex].resources.nanomaterials += 2;
+  players[playerIndex].production.nanomaterials += 2;
   endTurn(state);
   return { ...state, players };
 }
@@ -250,8 +257,8 @@ export function cosmicExcavator(
   playerIndex: number,
 ): IFullActiveGame {
   const players = clonePlayers(state);
-  players[playerIndex].resources.nanomaterials += 2;
-  players[playerIndex].planetIntegrity += 1;
+  players[playerIndex].production.nanomaterials += 1;
+  players[playerIndex].planetIntegrity += 4;
   endTurn(state);
   return { ...state, players };
 }
@@ -263,7 +270,10 @@ export function laborArray(
 ): IFullActiveGame {
   const players = clonePlayers(state);
   players[playerIndex].planetIntegrity += 9;
-  // теряет 5 отрядов аналогично
+  players[playerIndex].resources.drones = Math.max(
+    0,
+    players[playerIndex].resources.drones - 5,
+  );
   endTurn(state);
   return { ...state, players };
 }
@@ -274,7 +284,7 @@ export function shockwave(state: IFullActiveGame, _: number): IFullActiveGame {
   players.forEach(
     (p) => (p.planetIntegrity = Math.max(0, p.planetIntegrity - 5)),
   );
-  state.turn += 1; // играем снова
+  state.turn += 1;
   return { ...state, players };
 }
 
@@ -284,7 +294,7 @@ export function grandShield(
   playerIndex: number,
 ): IFullActiveGame {
   const players = clonePlayers(state);
-  players[playerIndex].planetIntegrity += 8;
+  players[playerIndex].orbitalShield += 8;
   endTurn(state);
   return { ...state, players };
 }
@@ -295,8 +305,8 @@ export function hiddenCavity(
   playerIndex: number,
 ): IFullActiveGame {
   const players = clonePlayers(state);
-  players[playerIndex].resources.psiEnergy += 1;
-  state.turn += 1; // играем снова
+  players[playerIndex].production.psiEnergy += 1;
+  state.turn += 1;
   return { ...state, players };
 }
 
@@ -306,8 +316,8 @@ export function orbitalVault(
   playerIndex: number,
 ): IFullActiveGame {
   const players = clonePlayers(state);
-  players[playerIndex].planetIntegrity += 5;
-  players[playerIndex].resources.drones += 1;
+  players[playerIndex].orbitalShield += 5;
+  players[playerIndex].production.drones += 1;
   endTurn(state);
   return { ...state, players };
 }
@@ -318,8 +328,16 @@ export function plasmaSpire(
   playerIndex: number,
 ): IFullActiveGame {
   const players = clonePlayers(state);
+  const enemyIndex = playerIndex === 0 ? 1 : 0;
+
   players[playerIndex].planetIntegrity += 7;
   players[playerIndex].resources.psiEnergy += 7;
+  if (
+    players[playerIndex].production.drones <
+    players[enemyIndex].production.drones
+  ) {
+    players[playerIndex].production.drones += 1;
+  }
   endTurn(state);
   return { ...state, players };
 }
@@ -342,8 +360,8 @@ export function stellarCore(
   playerIndex: number,
 ): IFullActiveGame {
   const players = clonePlayers(state);
-  players[playerIndex].planetIntegrity += 6;
-  players[playerIndex].resources.psiEnergy += 3;
+  players[playerIndex].planetIntegrity += 3;
+  players[playerIndex].orbitalShield += 6;
   endTurn(state);
   return { ...state, players };
 }
@@ -354,7 +372,7 @@ export function orbitalBastion(
   playerIndex: number,
 ): IFullActiveGame {
   const players = clonePlayers(state);
-  players[playerIndex].planetIntegrity += 12;
+  players[playerIndex].orbitalShield += 12;
   endTurn(state);
   return { ...state, players };
 }
@@ -365,12 +383,9 @@ export function fortifyArray(
   playerIndex: number,
 ): IFullActiveGame {
   const players = clonePlayers(state);
-  players[playerIndex].planetIntegrity += 7;
+  players[playerIndex].orbitalShield += 7;
   const enemyIndex = playerIndex === 0 ? 1 : 0;
-  players[enemyIndex].planetIntegrity = Math.max(
-    0,
-    players[enemyIndex].planetIntegrity - 6,
-  );
+  dealDamage(players, enemyIndex, 6);
   endTurn(state);
   return { ...state, players };
 }
@@ -381,8 +396,8 @@ export function newFrontiers(
   playerIndex: number,
 ): IFullActiveGame {
   const players = clonePlayers(state);
-  players[playerIndex].planetIntegrity += 8;
-  players[playerIndex].resources.psiEnergy += 5;
+  players[playerIndex].planetIntegrity += 5;
+  players[playerIndex].orbitalShield += 8;
   endTurn(state);
   return { ...state, players };
 }
@@ -393,7 +408,7 @@ export function ultimateShield(
   playerIndex: number,
 ): IFullActiveGame {
   const players = clonePlayers(state);
-  players[playerIndex].planetIntegrity += 15;
+  players[playerIndex].orbitalShield += 15;
   endTurn(state);
   return { ...state, players };
 }
@@ -405,9 +420,9 @@ export function fieldSwap(
 ): IFullActiveGame {
   const players = clonePlayers(state);
   const enemyIndex = playerIndex === 0 ? 1 : 0;
-  const temp = players[playerIndex].planetIntegrity;
-  players[playerIndex].planetIntegrity = players[enemyIndex].planetIntegrity;
-  players[enemyIndex].planetIntegrity = temp;
+  const temp = players[playerIndex].orbitalShield;
+  players[playerIndex].orbitalShield = players[enemyIndex].orbitalShield;
+  players[enemyIndex].orbitalShield = temp;
   endTurn(state);
   return { ...state, players };
 }
@@ -419,11 +434,8 @@ export function orbitalCannon(
 ): IFullActiveGame {
   const players = clonePlayers(state);
   const enemyIndex = playerIndex === 0 ? 1 : 0;
-  players[playerIndex].planetIntegrity += 6;
-  players[enemyIndex].planetIntegrity = Math.max(
-    0,
-    players[enemyIndex].planetIntegrity - 10,
-  );
+  players[playerIndex].orbitalShield += 6;
+  dealDamage(players, enemyIndex, 10);
   endTurn(state);
   return { ...state, players };
 }
@@ -434,9 +446,8 @@ export function coreReactor(
   playerIndex: number,
 ): IFullActiveGame {
   const players = clonePlayers(state);
-  /*  const enemyIndex = playerIndex === 0 ? 1 : 0; */
-  players[playerIndex].planetIntegrity += 20;
-  players[playerIndex].resources.psiEnergy += 8;
+  players[playerIndex].planetIntegrity += 8;
+  players[playerIndex].orbitalShield += 20;
   endTurn(state);
   return { ...state, players };
 }

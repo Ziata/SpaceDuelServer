@@ -2,7 +2,7 @@ import { IPlayerGameState } from '../types/game.types';
 import { GameDocument } from '../schemas/game.schema';
 import { CardRegistry } from 'src/cards/cards-registry.service';
 
-function shuffleArray<T>(array: T[]): T[] {
+export function shuffleArray<T>(array: T[]): T[] {
   const newArray = [...array];
   for (let i = newArray.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -21,7 +21,7 @@ export function initializePlayersFromIds(
 
   // Распределяем карты каждому игроку
   const playersState: IPlayerGameState[] = game.players.map((user) => {
-    const hand = shuffledDeck.splice(0, 2);
+    const hand = shuffledDeck.splice(0, 6);
     return {
       id: user.id,
       name: user.name,

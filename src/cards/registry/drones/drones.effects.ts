@@ -1,4 +1,5 @@
-import { clonePlayers, endTurn } from 'src/cards/utils';
+import { DamageType } from 'src/cards/types/cards.types';
+import { clonePlayers, dealDamage, endTurn } from 'src/cards/utils';
 import { IFullActiveGame } from 'src/games/types/game.types';
 
 // =====================
@@ -21,10 +22,10 @@ export function rogueSignal(
 /* dr_002 */
 export function lunarPulse(
   state: IFullActiveGame,
-  playerIndex: number,
+  playerIndex: 1 | 0,
 ): IFullActiveGame {
   const players = clonePlayers(state);
-  players.forEach((p) => (p.resources.drones += 1));
+  players.forEach((p) => (p.production.drones += 1));
   players[playerIndex].resources.drones += 3;
   endTurn(state);
   return { ...state, players };
@@ -33,14 +34,11 @@ export function lunarPulse(
 /* dr_003 */
 export function microDrone(
   state: IFullActiveGame,
-  playerIndex: number,
+  playerIndex: 1 | 0,
 ): IFullActiveGame {
   const players = clonePlayers(state);
   const enemyIndex = playerIndex === 0 ? 1 : 0;
-  players[enemyIndex].planetIntegrity = Math.max(
-    0,
-    players[enemyIndex].planetIntegrity - 4,
-  );
+  dealDamage(players, enemyIndex, 4);
   players[playerIndex].resources.psiEnergy = Math.max(
     0,
     players[playerIndex].resources.psiEnergy - 3,
@@ -52,14 +50,11 @@ export function microDrone(
 /* dr_004 */
 export function echoPulse(
   state: IFullActiveGame,
-  playerIndex: number,
+  playerIndex: 1 | 0,
 ): IFullActiveGame {
   const players = clonePlayers(state);
   const enemyIndex = playerIndex === 0 ? 1 : 0;
-  players[enemyIndex].planetIntegrity = Math.max(
-    0,
-    players[enemyIndex].planetIntegrity - 2,
-  );
+  dealDamage(players, enemyIndex, 2);
   state.turn += 1; // играем снова
   return { ...state, players };
 }
@@ -67,14 +62,11 @@ export function echoPulse(
 /* dr_005 */
 export function ionLance(
   state: IFullActiveGame,
-  playerIndex: number,
+  playerIndex: 1 | 0,
 ): IFullActiveGame {
   const players = clonePlayers(state);
   const enemyIndex = playerIndex === 0 ? 1 : 0;
-  players[enemyIndex].planetIntegrity = Math.max(
-    0,
-    players[enemyIndex].planetIntegrity - 3,
-  );
+  dealDamage(players, enemyIndex, 3);
   players[playerIndex].resources.psiEnergy += 1;
   endTurn(state);
   return { ...state, players };
@@ -83,17 +75,16 @@ export function ionLance(
 /* dr_006 */
 export function swarmStrike(
   state: IFullActiveGame,
-  playerIndex: number,
+  playerIndex: 1 | 0,
 ): IFullActiveGame {
   const players = clonePlayers(state);
   const enemyIndex = playerIndex === 0 ? 1 : 0;
-  const damage =
+  dealDamage(
+    players,
+    enemyIndex,
     players[playerIndex].orbitalShield > players[enemyIndex].orbitalShield
       ? 3
-      : 2;
-  players[enemyIndex].planetIntegrity = Math.max(
-    0,
-    players[enemyIndex].planetIntegrity - damage,
+      : 2,
   );
   endTurn(state);
   return { ...state, players };
@@ -102,10 +93,10 @@ export function swarmStrike(
 /* dr_007 */
 export function droneReinforce(
   state: IFullActiveGame,
-  playerIndex: number,
+  playerIndex: 1 | 0,
 ): IFullActiveGame {
   const players = clonePlayers(state);
-  players[playerIndex].resources.drones += 1;
+  players[playerIndex].production.drones += 1;
   endTurn(state);
   return { ...state, players };
 }
@@ -113,14 +104,11 @@ export function droneReinforce(
 /* dr_008 */
 export function orbitalStrike(
   state: IFullActiveGame,
-  playerIndex: number,
+  playerIndex: 1 | 0,
 ): IFullActiveGame {
   const players = clonePlayers(state);
   const enemyIndex = playerIndex === 0 ? 1 : 0;
-  players[enemyIndex].planetIntegrity = Math.max(
-    0,
-    players[enemyIndex].planetIntegrity - 6,
-  );
+  dealDamage(players, enemyIndex, 6);
   endTurn(state);
   return { ...state, players };
 }
@@ -128,18 +116,12 @@ export function orbitalStrike(
 /* dr_009 */
 export function berserkModule(
   state: IFullActiveGame,
-  playerIndex: number,
+  playerIndex: 1 | 0,
 ): IFullActiveGame {
   const players = clonePlayers(state);
   const enemyIndex = playerIndex === 0 ? 1 : 0;
-  players[enemyIndex].planetIntegrity = Math.max(
-    0,
-    players[enemyIndex].planetIntegrity - 8,
-  );
-  players[playerIndex].planetIntegrity = Math.max(
-    0,
-    players[playerIndex].planetIntegrity - 3,
-  );
+  dealDamage(players, enemyIndex, 8);
+  dealDamage(players, playerIndex, 3);
   endTurn(state);
   return { ...state, players };
 }
@@ -147,33 +129,24 @@ export function berserkModule(
 /* dr_010 */
 export function sniperDrone(
   state: IFullActiveGame,
-  playerIndex: number,
+  playerIndex: 1 | 0,
 ): IFullActiveGame {
   const players = clonePlayers(state);
   const enemyIndex = playerIndex === 0 ? 1 : 0;
-  players[enemyIndex].planetIntegrity = Math.max(
-    0,
-    players[enemyIndex].planetIntegrity - 3,
-  );
-  players[playerIndex].planetIntegrity = Math.max(
-    0,
-    players[playerIndex].planetIntegrity - 1,
-  );
+  dealDamage(players, enemyIndex, 3);
+  dealDamage(players, playerIndex, 1);
   endTurn(state);
   return { ...state, players };
 }
 
 /* dr_011 */
-export function dwarfLauncher(
+export function nebulaLauncher(
   state: IFullActiveGame,
-  playerIndex: number,
+  playerIndex: 1 | 0,
 ): IFullActiveGame {
   const players = clonePlayers(state);
   const enemyIndex = playerIndex === 0 ? 1 : 0;
-  players[enemyIndex].planetIntegrity = Math.max(
-    0,
-    players[enemyIndex].planetIntegrity - 4,
-  );
+  dealDamage(players, enemyIndex, 4);
   players[playerIndex].orbitalShield += 3;
   endTurn(state);
   return { ...state, players };
@@ -182,23 +155,25 @@ export function dwarfLauncher(
 /* dr_012 */
 export function demolisher(
   state: IFullActiveGame,
-  playerIndex: number,
+  playerIndex: 1 | 0,
 ): IFullActiveGame {
   const players = clonePlayers(state);
   const enemyIndex = playerIndex === 0 ? 1 : 0;
-  players[enemyIndex].planetIntegrity = Math.max(
-    0,
-    players[enemyIndex].planetIntegrity - 6,
-  );
+  dealDamage(players, enemyIndex, 6);
   endTurn(state);
   return { ...state, players };
 }
 
 /* dr_013 */
-export function voidPulse(state: IFullActiveGame, _: number): IFullActiveGame {
+export function voidPulse(
+  state: IFullActiveGame,
+  playerIndex: 1 | 0,
+): IFullActiveGame {
   const players = clonePlayers(state);
+  const enemyIndex = playerIndex === 0 ? 1 : 0;
+  dealDamage(players, enemyIndex, 6);
+  dealDamage(players, playerIndex, 6);
   players.forEach((p) => {
-    p.planetIntegrity = Math.max(0, p.planetIntegrity - 6);
     p.resources.nanomaterials = Math.max(0, p.resources.nanomaterials - 5);
     p.resources.psiEnergy = Math.max(0, p.resources.psiEnergy - 5);
     p.resources.drones = Math.max(0, p.resources.drones - 6);
@@ -210,15 +185,15 @@ export function voidPulse(state: IFullActiveGame, _: number): IFullActiveGame {
 /* dr_014 */
 export function rampageDrone(
   state: IFullActiveGame,
-  playerIndex: number,
+  playerIndex: 1 | 0,
 ): IFullActiveGame {
   const players = clonePlayers(state);
   const enemyIndex = playerIndex === 0 ? 1 : 0;
-  players[enemyIndex].planetIntegrity = Math.max(
+  dealDamage(players, enemyIndex, 6);
+  players[enemyIndex].resources.drones = Math.max(
     0,
-    players[enemyIndex].planetIntegrity - 6,
+    players[enemyIndex].resources.drones - 3,
   );
-  players[playerIndex].resources.drones += 3;
   endTurn(state);
   return { ...state, players };
 }
@@ -226,14 +201,11 @@ export function rampageDrone(
 /* dr_015 */
 export function microSerpents(
   state: IFullActiveGame,
-  playerIndex: number,
+  playerIndex: 1 | 0,
 ): IFullActiveGame {
   const players = clonePlayers(state);
   const enemyIndex = playerIndex === 0 ? 1 : 0;
-  players[enemyIndex].planetIntegrity = Math.max(
-    0,
-    players[enemyIndex].planetIntegrity - 4,
-  );
+  dealDamage(players, enemyIndex, 4, DamageType.PLANET_ONLY);
   endTurn(state);
   return { ...state, players };
 }
@@ -241,14 +213,11 @@ export function microSerpents(
 /* dr_016 */
 export function titanCannon(
   state: IFullActiveGame,
-  playerIndex: number,
+  playerIndex: 1 | 0,
 ): IFullActiveGame {
   const players = clonePlayers(state);
   const enemyIndex = playerIndex === 0 ? 1 : 0;
-  players[enemyIndex].planetIntegrity = Math.max(
-    0,
-    players[enemyIndex].planetIntegrity - 7,
-  );
+  dealDamage(players, enemyIndex, 7);
   endTurn(state);
   return { ...state, players };
 }
@@ -256,14 +225,11 @@ export function titanCannon(
 /* dr_017 */
 export function phantomEmitter(
   state: IFullActiveGame,
-  playerIndex: number,
+  playerIndex: 1 | 0,
 ): IFullActiveGame {
   const players = clonePlayers(state);
   const enemyIndex = playerIndex === 0 ? 1 : 0;
-  players[enemyIndex].planetIntegrity = Math.max(
-    0,
-    players[enemyIndex].planetIntegrity - 2,
-  );
+  dealDamage(players, enemyIndex, 2);
   state.turn += 1; // играем снова
   return { ...state, players };
 }
@@ -271,24 +237,22 @@ export function phantomEmitter(
 /* dr_018 */
 export function tutorDrone(
   state: IFullActiveGame,
-  playerIndex: number,
+  playerIndex: 1 | 0,
 ): IFullActiveGame {
   const players = clonePlayers(state);
-  players[playerIndex].resources.drones += 2;
+  players[playerIndex].production.drones += 2;
   endTurn(state);
   return { ...state, players };
 }
 
 /* dr_019 */
-export function gremlinTurret(
+export function voidTurret(
   state: IFullActiveGame,
-  playerIndex: number,
+  playerIndex: 1 | 0,
 ): IFullActiveGame {
   const players = clonePlayers(state);
-  players[playerIndex].planetIntegrity = Math.max(
-    0,
-    players[playerIndex].planetIntegrity - 2,
-  );
+  const enemyIndex = playerIndex === 0 ? 1 : 0;
+  dealDamage(players, enemyIndex, 2);
   players[playerIndex].orbitalShield += 4;
   players[playerIndex].resources.drones += 2;
   endTurn(state);
@@ -298,15 +262,12 @@ export function gremlinTurret(
 /* dr_020 */
 export function breakerBeam(
   state: IFullActiveGame,
-  playerIndex: number,
+  playerIndex: 1 | 0,
 ): IFullActiveGame {
   const players = clonePlayers(state);
   const enemyIndex = playerIndex === 0 ? 1 : 0;
   const damage = players[enemyIndex].orbitalShield === 0 ? 10 : 6;
-  players[enemyIndex].planetIntegrity = Math.max(
-    0,
-    players[enemyIndex].planetIntegrity - damage,
-  );
+  dealDamage(players, enemyIndex, damage);
   endTurn(state);
   return { ...state, players };
 }
@@ -314,7 +275,7 @@ export function breakerBeam(
 /* dr_021 */
 export function singularityRay(
   state: IFullActiveGame,
-  playerIndex: number,
+  playerIndex: 1 | 0,
 ): IFullActiveGame {
   const players = clonePlayers(state);
   const enemyIndex = playerIndex === 0 ? 1 : 0;
@@ -322,10 +283,7 @@ export function singularityRay(
     players[playerIndex].resources.drones > players[enemyIndex].resources.drones
       ? 12
       : 8;
-  players[enemyIndex].planetIntegrity = Math.max(
-    0,
-    players[enemyIndex].planetIntegrity - damage,
-  );
+  dealDamage(players, enemyIndex, damage);
   endTurn(state);
   return { ...state, players };
 }
@@ -333,14 +291,11 @@ export function singularityRay(
 /* dr_022 */
 export function wolfStrike(
   state: IFullActiveGame,
-  playerIndex: number,
+  playerIndex: 1 | 0,
 ): IFullActiveGame {
   const players = clonePlayers(state);
   const enemyIndex = playerIndex === 0 ? 1 : 0;
-  players[enemyIndex].planetIntegrity = Math.max(
-    0,
-    players[enemyIndex].planetIntegrity - 9,
-  );
+  dealDamage(players, enemyIndex, 9);
   endTurn(state);
   return { ...state, players };
 }
@@ -348,17 +303,17 @@ export function wolfStrike(
 /* dr_023 */
 export function sharpshotDrone(
   state: IFullActiveGame,
-  playerIndex: number,
+  playerIndex: 1 | 0,
 ): IFullActiveGame {
   const players = clonePlayers(state);
   const enemyIndex = playerIndex === 0 ? 1 : 0;
-  const damage =
+  dealDamage(
+    players,
+    enemyIndex,
+    6,
     players[playerIndex].orbitalShield > players[enemyIndex].orbitalShield
-      ? 6
-      : 6;
-  players[enemyIndex].planetIntegrity = Math.max(
-    0,
-    players[enemyIndex].planetIntegrity - damage,
+      ? DamageType.PLANET_ONLY
+      : DamageType.NORMAL,
   );
   endTurn(state);
   return { ...state, players };
@@ -367,15 +322,12 @@ export function sharpshotDrone(
 /* dr_024 */
 export function corrosiveCloud(
   state: IFullActiveGame,
-  playerIndex: number,
+  playerIndex: 1 | 0,
 ): IFullActiveGame {
   const players = clonePlayers(state);
   const enemyIndex = playerIndex === 0 ? 1 : 0;
   const damage = players[enemyIndex].orbitalShield > 10 ? 10 : 7;
-  players[enemyIndex].planetIntegrity = Math.max(
-    0,
-    players[enemyIndex].planetIntegrity - damage,
-  );
+  dealDamage(players, enemyIndex, damage);
   endTurn(state);
   return { ...state, players };
 }
@@ -383,17 +335,14 @@ export function corrosiveCloud(
 /* dr_025 */
 export function rockDriller(
   state: IFullActiveGame,
-  playerIndex: number,
+  playerIndex: 1 | 0,
 ): IFullActiveGame {
   const players = clonePlayers(state);
   const enemyIndex = playerIndex === 0 ? 1 : 0;
-  players[enemyIndex].resources.nanomaterials = Math.max(
+  dealDamage(players, enemyIndex, 8);
+  players[enemyIndex].production.nanomaterials = Math.max(
     0,
-    players[enemyIndex].resources.nanomaterials - 1,
-  );
-  players[enemyIndex].planetIntegrity = Math.max(
-    0,
-    players[enemyIndex].planetIntegrity - 8,
+    players[enemyIndex].production.nanomaterials - 1,
   );
   endTurn(state);
   return { ...state, players };
@@ -402,7 +351,7 @@ export function rockDriller(
 /* dr_026 */
 export function scavenger(
   state: IFullActiveGame,
-  playerIndex: number,
+  playerIndex: 1 | 0,
 ): IFullActiveGame {
   const players = clonePlayers(state);
   const enemyIndex = playerIndex === 0 ? 1 : 0;
@@ -427,14 +376,11 @@ export function scavenger(
 /* dr_027 */
 export function assaultModule(
   state: IFullActiveGame,
-  playerIndex: number,
+  playerIndex: 1 | 0,
 ): IFullActiveGame {
   const players = clonePlayers(state);
   const enemyIndex = playerIndex === 0 ? 1 : 0;
-  players[enemyIndex].planetIntegrity = Math.max(
-    0,
-    players[enemyIndex].planetIntegrity - 13,
-  );
+  dealDamage(players, enemyIndex, 13);
   players[playerIndex].resources.psiEnergy = Math.max(
     0,
     players[playerIndex].resources.psiEnergy - 3,
@@ -446,14 +392,11 @@ export function assaultModule(
 /* dr_028 */
 export function piercingDrone(
   state: IFullActiveGame,
-  playerIndex: number,
+  playerIndex: 1 | 0,
 ): IFullActiveGame {
   const players = clonePlayers(state);
   const enemyIndex = playerIndex === 0 ? 1 : 0;
-  players[enemyIndex].planetIntegrity = Math.max(
-    0,
-    players[enemyIndex].planetIntegrity - 5,
-  );
+  dealDamage(players, enemyIndex, 5, DamageType.PLANET_ONLY);
   players[enemyIndex].resources.drones = Math.max(
     0,
     players[enemyIndex].resources.drones - 6,
@@ -465,15 +408,12 @@ export function piercingDrone(
 /* dr_029 */
 export function shockCrawler(
   state: IFullActiveGame,
-  playerIndex: number,
+  playerIndex: 1 | 0,
 ): IFullActiveGame {
   const players = clonePlayers(state);
-  players[playerIndex].planetIntegrity += 4;
   const enemyIndex = playerIndex === 0 ? 1 : 0;
-  players[enemyIndex].planetIntegrity = Math.max(
-    0,
-    players[enemyIndex].planetIntegrity - 6,
-  );
+  dealDamage(players, enemyIndex, 10);
+  players[playerIndex].planetIntegrity += 4;
   endTurn(state);
   return { ...state, players };
 }
@@ -481,13 +421,14 @@ export function shockCrawler(
 /* dr_030 */
 export function darkVanguard(
   state: IFullActiveGame,
-  playerIndex: number,
+  playerIndex: 1 | 0,
 ): IFullActiveGame {
   const players = clonePlayers(state);
   const enemyIndex = playerIndex === 0 ? 1 : 0;
-  players[enemyIndex].planetIntegrity = Math.max(
+  dealDamage(players, enemyIndex, 10);
+  players[enemyIndex].production.drones = Math.max(
     0,
-    players[enemyIndex].planetIntegrity - 10,
+    players[enemyIndex].production.drones - 1,
   );
   endTurn(state);
   return { ...state, players };
@@ -496,14 +437,11 @@ export function darkVanguard(
 /* dr_031 */
 export function pegasusLancer(
   state: IFullActiveGame,
-  playerIndex: number,
+  playerIndex: 1 | 0,
 ): IFullActiveGame {
   const players = clonePlayers(state);
   const enemyIndex = playerIndex === 0 ? 1 : 0;
-  players[enemyIndex].planetIntegrity = Math.max(
-    0,
-    players[enemyIndex].planetIntegrity - 12,
-  );
+  dealDamage(players, enemyIndex, 12, DamageType.PLANET_ONLY);
   endTurn(state);
   return { ...state, players };
 }
@@ -511,17 +449,18 @@ export function pegasusLancer(
 /* dr_032 */
 export function novaDragon(
   state: IFullActiveGame,
-  playerIndex: number,
+  playerIndex: 1 | 0,
 ): IFullActiveGame {
   const players = clonePlayers(state);
   const enemyIndex = playerIndex === 0 ? 1 : 0;
-  players[enemyIndex].planetIntegrity = Math.max(
-    0,
-    players[enemyIndex].planetIntegrity - 20,
-  );
+  dealDamage(players, enemyIndex, 20);
   players[enemyIndex].resources.psiEnergy = Math.max(
     0,
     players[enemyIndex].resources.psiEnergy - 10,
+  );
+  players[enemyIndex].production.drones = Math.max(
+    0,
+    players[enemyIndex].production.drones - 1,
   );
   endTurn(state);
   return { ...state, players };

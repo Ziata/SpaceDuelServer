@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { PlayerDto } from '../dto/player.dto';
 import { HydratedDocument } from 'mongoose';
 import { IPlayerGameState } from '../types/game.types';
-import { ICardBase } from 'src/cards/types/cards.types';
+import { IActiveCard, ICardBase } from 'src/cards/types/cards.types';
 
 export type GameStatus = 'waiting' | 'active' | 'finished';
 
@@ -27,6 +27,9 @@ export class Game {
 
   @Prop({ type: [Object], default: [] })
   deck: ICardBase[];
+
+  @Prop({ type: [Object], default: [] })
+  activeCards: IActiveCard[];
 
   @Prop({ type: [Object], default: [] })
   discardPile: ICardBase[];

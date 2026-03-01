@@ -10,7 +10,7 @@ import {
   orbitalStrike,
   berserkModule,
   sniperDrone,
-  dwarfLauncher,
+  nebulaLauncher,
   demolisher,
   voidPulse,
   rampageDrone,
@@ -18,7 +18,7 @@ import {
   titanCannon,
   phantomEmitter,
   tutorDrone,
-  gremlinTurret,
+  voidTurret,
   breakerBeam,
   singularityRay,
   wolfStrike,
@@ -48,7 +48,7 @@ export const dronesCards: ICard[] = [
     name: 'Lunar Pulse',
     type: 'drones',
     cost: 0,
-    description: '+1 drone all players, gain 3 drones.',
+    description: 'All +1 drone/turn; you gain 3 drones.',
     effect: lunarPulse,
   },
   {
@@ -64,7 +64,7 @@ export const dronesCards: ICard[] = [
     name: 'Echo Pulse',
     type: 'drones',
     cost: 1,
-    description: '2 damage enemy, play again.',
+    description: '2 damage enemy. Play again.',
     effect: echoPulse,
   },
   {
@@ -80,7 +80,7 @@ export const dronesCards: ICard[] = [
     name: 'Swarm Strike',
     type: 'drones',
     cost: 2,
-    description: '3–2 damage depending on enemy shield.',
+    description: 'if shield > enemy, 3 damage, else 2 damage.',
     effect: swarmStrike,
   },
   {
@@ -88,7 +88,7 @@ export const dronesCards: ICard[] = [
     name: 'Drone Reinforce',
     type: 'drones',
     cost: 3,
-    description: '+1 drone base.',
+    description: '+1 drone/turn.',
     effect: droneReinforce,
   },
   {
@@ -117,11 +117,11 @@ export const dronesCards: ICard[] = [
   },
   {
     id: 'dr_011',
-    name: 'Dwarf Launcher',
+    name: 'Nebula Launcher',
     type: 'drones',
     cost: 5,
     description: '4 damage enemy, +3 shield.',
-    effect: dwarfLauncher,
+    effect: nebulaLauncher,
   },
   {
     id: 'dr_012',
@@ -136,7 +136,7 @@ export const dronesCards: ICard[] = [
     name: 'Void Pulse',
     type: 'drones',
     cost: 5,
-    description: '6 damage all, all players lose resources.',
+    description: '6 damage all, all lose 5 drones.',
     effect: voidPulse,
   },
   {
@@ -152,7 +152,7 @@ export const dronesCards: ICard[] = [
     name: 'Micro Serpents',
     type: 'drones',
     cost: 6,
-    description: '4 damage enemy structure.',
+    description: '4 damage enemy planet.',
     effect: microSerpents,
   },
   {
@@ -168,7 +168,7 @@ export const dronesCards: ICard[] = [
     name: 'Phantom Emitter',
     type: 'drones',
     cost: 6,
-    description: '2 damage enemy, play again.',
+    description: '2 damage enemy. Play again.',
     effect: phantomEmitter,
   },
   {
@@ -176,23 +176,23 @@ export const dronesCards: ICard[] = [
     name: 'Tutor Drone',
     type: 'drones',
     cost: 7,
-    description: '+2 drones.',
+    description: '+2 drones/turn.',
     effect: tutorDrone,
   },
   {
     id: 'dr_019',
-    name: 'Gremlin Turret',
+    name: 'Void Turret',
     type: 'drones',
     cost: 8,
     description: '2 damage, +4 shield, +2 integrity.',
-    effect: gremlinTurret,
+    effect: voidTurret,
   },
   {
     id: 'dr_020',
     name: 'Breaker Beam',
     type: 'drones',
     cost: 8,
-    description: 'If enemy shield=0, 10 damage, else 6 damage.',
+    description: 'if enemy shield = 0, 10 damage, else 6 damage.',
     effect: breakerBeam,
   },
   {
@@ -200,7 +200,7 @@ export const dronesCards: ICard[] = [
     name: 'Singularity Ray',
     type: 'drones',
     cost: 9,
-    description: '12 damage if enemy drones < yours, else 8 damage.',
+    description: 'if drones < enemy, 12 damage, else 8 damage.',
     effect: singularityRay,
   },
   {
@@ -216,7 +216,7 @@ export const dronesCards: ICard[] = [
     name: 'Sharpshot Drone',
     type: 'drones',
     cost: 10,
-    description: '6 damage enemy if shield > enemy, else 6 damage.',
+    description: 'if shield > enemy, 6 damage, else 6 damage.',
     effect: sharpshotDrone,
   },
   {
@@ -224,7 +224,7 @@ export const dronesCards: ICard[] = [
     name: 'Corrosive Cloud',
     type: 'drones',
     cost: 11,
-    description: '10 damage if enemy shield>10, else 7 damage.',
+    description: 'if shield > 10, 10 damage, else 7 damage.',
     effect: corrosiveCloud,
   },
   {
@@ -232,7 +232,7 @@ export const dronesCards: ICard[] = [
     name: 'Rock Driller',
     type: 'drones',
     cost: 11,
-    description: '8 damage, -1 enemy mine.',
+    description: '8 damage; -1 enemy nanomaterial/turn.',
     effect: rockDriller,
   },
   {
@@ -240,7 +240,7 @@ export const dronesCards: ICard[] = [
     name: 'Scavenger',
     type: 'drones',
     cost: 12,
-    description: 'Enemy loses 10 energy/5 nanomaterials, gain half.',
+    description: 'Enemy lose 10 energy & 5 nanomaterials.',
     effect: scavenger,
   },
   {
@@ -248,7 +248,7 @@ export const dronesCards: ICard[] = [
     name: 'Assault Module',
     type: 'drones',
     cost: 13,
-    description: '13 damage enemy, lose 3 energy.',
+    description: '13 damage enemy, lose 3 psi energy.',
     effect: assaultModule,
   },
   {
@@ -256,7 +256,7 @@ export const dronesCards: ICard[] = [
     name: 'Piercing Drone',
     type: 'drones',
     cost: 14,
-    description: '5 damage enemy structure, enemy loses 6 drones.',
+    description: '5 damage planet, enemy loses 6 drones.',
     effect: piercingDrone,
   },
   {
@@ -272,7 +272,7 @@ export const dronesCards: ICard[] = [
     name: 'Dark Vanguard',
     type: 'drones',
     cost: 17,
-    description: '10 damage enemy, -1 enemy drone base.',
+    description: '10 damage; enemy drones -1/turn.',
     effect: darkVanguard,
   },
   {
@@ -280,7 +280,7 @@ export const dronesCards: ICard[] = [
     name: 'Pegasus Lancer',
     type: 'drones',
     cost: 18,
-    description: '12 damage enemy structure.',
+    description: '12 damage enemy planet.',
     effect: pegasusLancer,
   },
   {
@@ -288,7 +288,7 @@ export const dronesCards: ICard[] = [
     name: 'Nova Dragon',
     type: 'drones',
     cost: 25,
-    description: '20 damage enemy, enemy loses 10 energy, -1 enemy drone base.',
+    description: '20 damage enemy, -1 drone/turn, -10 psi energy.',
     effect: novaDragon,
   },
 ];

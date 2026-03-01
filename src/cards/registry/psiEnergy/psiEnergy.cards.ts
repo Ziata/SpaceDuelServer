@@ -41,7 +41,7 @@ export const psiEnergyCards: ICard[] = [
     name: 'Quantum Shard',
     type: 'psiEnergy',
     cost: 0,
-    description: '+1–2 planet integrity, depending on enemy.',
+    description: '+2 integrity if lower than enemy, else +1.',
     effect: quantumShard,
   },
   {
@@ -49,7 +49,7 @@ export const psiEnergyCards: ICard[] = [
     name: 'Nebula Cascade',
     type: 'psiEnergy',
     cost: 0,
-    description: '+1 planet integrity all players, +3 energy.',
+    description: 'All players +1 integrity, +3 energy.',
     effect: nebulaCascade,
   },
   {
@@ -57,7 +57,7 @@ export const psiEnergyCards: ICard[] = [
     name: 'Prism Core',
     type: 'psiEnergy',
     cost: 1,
-    description: '+1 planet integrity, play again.',
+    description: '+1 integrity. Play again.',
     effect: prismCore,
   },
   {
@@ -73,7 +73,7 @@ export const psiEnergyCards: ICard[] = [
     name: 'Smoky Quartz',
     type: 'psiEnergy',
     cost: 2,
-    description: '1 damage enemy, play again.',
+    description: '1 damage to planet integrity. Play again.',
     effect: smokyQuartz,
   },
   {
@@ -81,7 +81,7 @@ export const psiEnergyCards: ICard[] = [
     name: 'Cosmic Rift',
     type: 'psiEnergy',
     cost: 2,
-    description: '3 damage enemy planet.',
+    description: '3 damage to planet integrity.',
     effect: cosmicRift,
   },
   {
@@ -89,7 +89,7 @@ export const psiEnergyCards: ICard[] = [
     name: 'Force Burst',
     type: 'psiEnergy',
     cost: 3,
-    description: '-5 integrity self, +2 drones.',
+    description: '-5 integrity self, +2 psi energy per turn.',
     effect: forceBurst,
   },
   {
@@ -105,7 +105,7 @@ export const psiEnergyCards: ICard[] = [
     name: 'Psi Weaver',
     type: 'psiEnergy',
     cost: 3,
-    description: '+1 drones.',
+    description: '+1 psi energy.',
     effect: psiWeaver,
   },
   {
@@ -121,7 +121,7 @@ export const psiEnergyCards: ICard[] = [
     name: 'Stellar Spear',
     type: 'psiEnergy',
     cost: 4,
-    description: '5 damage enemy planet.',
+    description: '5 damage to enemy planet.',
     effect: stellarSpear,
   },
   {
@@ -137,7 +137,7 @@ export const psiEnergyCards: ICard[] = [
     name: 'Initiation Sequence',
     type: 'psiEnergy',
     cost: 5,
-    description: '+4 integrity, -3 drones, 2 damage enemy.',
+    description: '+4 integrity, -3 drones, 2 damage integrity.',
     effect: initiationSequence,
   },
   {
@@ -145,7 +145,7 @@ export const psiEnergyCards: ICard[] = [
     name: 'Cosmic Discord',
     type: 'psiEnergy',
     cost: 5,
-    description: '7 damage all planets, -1 drones all players.',
+    description: '7 damage all planets, -1 drone/turn all.',
     effect: cosmicDiscord,
   },
   {
@@ -161,7 +161,7 @@ export const psiEnergyCards: ICard[] = [
     name: 'Matrix Pulse',
     type: 'psiEnergy',
     cost: 6,
-    description: '+3 integrity, +1 enemy integrity, +1 drones.',
+    description: '+3 integrity, enemy +1, +1 psi/turn.',
     effect: matrixPulse,
   },
   {
@@ -177,7 +177,7 @@ export const psiEnergyCards: ICard[] = [
     name: 'Harmony Array',
     type: 'psiEnergy',
     cost: 7,
-    description: '+3 integrity, +3 drones, +3 nanomaterials.',
+    description: '+3 integrity, +3 shield, +1 psi/turn.',
     effect: harmonyArray,
   },
   {
@@ -185,7 +185,7 @@ export const psiEnergyCards: ICard[] = [
     name: 'Soft Stone',
     type: 'psiEnergy',
     cost: 7,
-    description: '+5 integrity, enemy loses 6 nanomaterials.',
+    description: '+5 integrity, enemy -6 nanomaterials.',
     effect: softStone,
   },
   {
@@ -193,7 +193,7 @@ export const psiEnergyCards: ICard[] = [
     name: 'Parity Core',
     type: 'psiEnergy',
     cost: 7,
-    description: 'Set all drones equal to strongest player.',
+    description: 'Set +1 psi/turn. to strongest player.',
     effect: parityCore,
   },
   {
@@ -201,7 +201,7 @@ export const psiEnergyCards: ICard[] = [
     name: 'Fragmentation Pulse',
     type: 'psiEnergy',
     cost: 8,
-    description: '-1 drone, 9 damage enemy.',
+    description: '-1 psi/turn, 9 damage enemy planet.',
     effect: fragmentationPulse,
   },
   {
@@ -209,7 +209,7 @@ export const psiEnergyCards: ICard[] = [
     name: 'Solidification',
     type: 'psiEnergy',
     cost: 8,
-    description: '+11 integrity, -6 nanomaterials enemy.',
+    description: '+11 integrity, -6 shield.',
     effect: solidification,
   },
   {
@@ -217,7 +217,7 @@ export const psiEnergyCards: ICard[] = [
     name: 'Pearl Wisdom',
     type: 'psiEnergy',
     cost: 9,
-    description: '+5 integrity, +1 drone.',
+    description: '+5 integrity, +1 psi energy per turn.',
     effect: pearlWisdom,
   },
   {
@@ -225,7 +225,7 @@ export const psiEnergyCards: ICard[] = [
     name: 'Sapphire Beacon',
     type: 'psiEnergy',
     cost: 10,
-    description: '+11 integrity.',
+    description: '+11 planet integrity.',
     effect: sapphireBeacon,
   },
   {
@@ -233,7 +233,7 @@ export const psiEnergyCards: ICard[] = [
     name: 'Lightning Surge',
     type: 'psiEnergy',
     cost: 11,
-    description: '8 damage enemy if stronger, else 8 damage all.',
+    description: 'If higher: 8 dmg enemy integrity; else 8 dmg all.',
     effect: lightningSurge,
   },
   {
@@ -241,7 +241,7 @@ export const psiEnergyCards: ICard[] = [
     name: 'Crystal Shield',
     type: 'psiEnergy',
     cost: 12,
-    description: '+8 integrity, +3 nanomaterials.',
+    description: '+8 integrity, +3 shield.',
     effect: crystalShield,
   },
   {
@@ -249,7 +249,7 @@ export const psiEnergyCards: ICard[] = [
     name: 'Ruby Flare',
     type: 'psiEnergy',
     cost: 13,
-    description: '+6 integrity, 4 damage enemy.',
+    description: '+6 integrity, 4 damage enemy planet.',
     effect: rubyFlare,
   },
   {
@@ -257,7 +257,7 @@ export const psiEnergyCards: ICard[] = [
     name: 'Empathy Core',
     type: 'psiEnergy',
     cost: 14,
-    description: '+8 integrity, +1 drone.',
+    description: '+8 integrity, +1 drone per turn.',
     effect: empathyCore,
   },
   {
@@ -265,7 +265,7 @@ export const psiEnergyCards: ICard[] = [
     name: 'Orbital Reactor',
     type: 'psiEnergy',
     cost: 15,
-    description: '+10 integrity, +5 drones, +5 nanomaterials.',
+    description: '+10 integrity, +5 shield, +5 drones.',
     effect: orbitalReactor,
   },
   {
@@ -273,7 +273,7 @@ export const psiEnergyCards: ICard[] = [
     name: 'Diamond Core',
     type: 'psiEnergy',
     cost: 16,
-    description: '+15 integrity.',
+    description: '+15 planet integrity.',
     effect: diamondCore,
   },
   {
