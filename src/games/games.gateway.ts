@@ -12,7 +12,7 @@ import { PlayerDto } from './dto/player.dto';
 
 @WebSocketGateway({
   cors: {
-    origin: 'https://spaceduel2.netlify.app/',
+    origin: 'https://spaceduel2.netlify.app',
     credentials: true,
   },
   transports: ['websocket'],
