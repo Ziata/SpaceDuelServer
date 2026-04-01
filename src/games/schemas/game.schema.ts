@@ -45,6 +45,9 @@ export class Game {
 
   createdAt: Date;
   updatedAt: Date;
+
+  @Prop({ type: Number, default: 0 })
+  turnEndsAt: number;
 }
 
 export const GameSchema = SchemaFactory.createForClass(Game);

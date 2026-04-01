@@ -25,8 +25,8 @@ export function initializePlayersFromIds(
     return {
       id: user.id,
       name: user.name,
-      planetIntegrity: 50,
-      orbitalShield: 20,
+      planetIntegrity: 25,
+      orbitalShield: 10,
       resources: { nanomaterials: 5, psiEnergy: 5, drones: 5 },
       production: { nanomaterials: 2, psiEnergy: 2, drones: 2 },
       hand,

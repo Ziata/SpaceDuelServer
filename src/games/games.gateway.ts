@@ -9,6 +9,7 @@ import { Server, Socket } from 'socket.io';
 import { GamesService } from './games.service';
 import { CreateGameDto } from './dto/game.dto';
 import { PlayerDto } from './dto/player.dto';
+import { GamesTimer } from './games.timer';
 
 @WebSocketGateway({
   cors: {
@@ -21,7 +22,15 @@ export class GamesGateway {
   @WebSocketServer()
   server: Server;
 
-  constructor(private readonly gamesService: GamesService) {}
+  constructor(
+    private readonly gamesService: GamesService,
+    private readonly gamesTimer: GamesTimer,
+  ) {}
+
+  afterInit(server: Server) {
+    // Запускаем таймер только после того, как сервер готов
+    this.gamesTimer.start(server);
+  }
 
   @SubscribeMessage('createGame')
   async handleCreateGame(@MessageBody() payload: CreateGameDto) {
@@ -50,6 +59,19 @@ export class GamesGateway {
   ) {
     await client.join(payload.gameId);
     client.data.userId = payload.userId;
+
+    const game = await this.gamesService.findOne(payload.gameId);
+    if (!game) return;
+
+    const serialized = this.gamesService.serializeGameForPlayer(
+      game,
+      payload.userId,
+    );
+
+    client.emit('gameState', {
+      game: serialized,
+      serverNow: Date.now(),
+    });
   }
 
   // 2️⃣ Второй игрок нажимает "Join"
@@ -71,11 +93,15 @@ export class GamesGateway {
 
       if (updatedGame.players.length >= 2) {
         this.server.to(payload.gameId).emit('gameStarted', {
-          gameId: payload.gameId,
+          game: updatedGame,
+          serverNow: new Date().getTime(),
         });
       } else {
         // Если ещё не старт — просто обновляем игроков
-        this.server.to(payload.gameId).emit('playerJoined', updatedGame);
+        this.server.to(payload.gameId).emit('playerJoined', {
+          game: updatedGame,
+          serverNow: new Date().getTime(),
+        });
       }
     }
   }
@@ -107,7 +133,10 @@ export class GamesGateway {
           game,
           socket.data.userId as string,
         );
-        socket.emit('playCard', serialized);
+        socket.emit('playCard', {
+          game: serialized,
+          serverNow: new Date().getTime(),
+        });
       }
 
       // Если есть победитель, уведомляем всех
@@ -148,7 +177,10 @@ export class GamesGateway {
           game,
           socket.data.userId as string,
         );
-        socket.emit('discardCard', serialized);
+        socket.emit('discardCard', {
+          game: serialized,
+          serverNow: new Date().getTime(),
+        });
       }
 
       // Если есть победитель, уведомляем всех

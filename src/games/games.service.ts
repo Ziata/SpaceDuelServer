@@ -8,7 +8,11 @@ import {
   initializePlayersFromIds,
   shuffleArray,
 } from './utils/game-initialize';
-import { IPlayerGameState, IPlayerPublicState } from './types/game.types';
+import {
+  IPlayerGameState,
+  IPlayerPublicState,
+  TURN_TIME,
+} from './types/game.types';
 import { CardRegistry } from 'src/cards/cards-registry.service';
 import { checkVictory } from './utils/check-victory';
 
@@ -30,11 +34,8 @@ export class GamesService {
     return this.gameModel.find().exec();
   }
 
-  async findAllActive(): Promise<Game[]> {
-    return this.gameModel
-      .find({ status: { $ne: 'finished' } })
-      .lean()
-      .exec();
+  async findAllActive(): Promise<GameDocument[]> {
+    return this.gameModel.find({ status: { $ne: 'finished' } }).exec();
   }
 
   // Read one
@@ -91,14 +92,15 @@ export class GamesService {
     if (!game.players.some((p) => p.id === player.id)) {
       game.players.push({
         ...player,
-        planetIntegrity: 50,
-        orbitalShield: 20,
+        planetIntegrity: 25,
+        orbitalShield: 10,
         resources: { nanomaterials: 5, psiEnergy: 5, drones: 5 },
         production: { nanomaterials: 2, psiEnergy: 2, drones: 2 },
         hand: [],
       });
 
       if (game.players.length === 2) {
+        game.turnEndsAt = Date.now() + TURN_TIME;
         game.status = 'active';
       }
 
@@ -169,6 +171,7 @@ export class GamesService {
       game.players = newGameState.players;
       game.currentPlayer = newGameState.currentPlayer;
       game.turn = newGameState.turn;
+      game.turnEndsAt = Date.now() + TURN_TIME;
       // -------------------------------------------------
       // 8️⃣ Начисляем production игроку,
       // который только что сходил
@@ -283,6 +286,8 @@ export class GamesService {
 
       // После изменения сброса или колоды:
 
+      game.turnEndsAt = Date.now() + TURN_TIME;
+
       // -------------------------------------------------
       // 7️⃣ Работа с рукой игрока
       // -------------------------------------------------
@@ -328,7 +333,6 @@ export class GamesService {
       // 9️⃣ Сохраняем обновлённое состояние игры
       // -------------------------------------------------
       await game.save();
-
       // -------------------------------------------------
       // 🔟 Проверяем условия победы
       // -------------------------------------------------

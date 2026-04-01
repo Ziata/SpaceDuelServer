@@ -5,12 +5,13 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Game, GameSchema } from './schemas/game.schema';
 import { GamesGateway } from './games.gateway';
 import { CardRegistry } from 'src/cards/cards-registry.service';
+import { GamesTimer } from './games.timer';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Game.name, schema: GameSchema }]),
   ],
   controllers: [GamesController],
-  providers: [GamesGateway, GamesService, CardRegistry],
+  providers: [GamesGateway, GamesService, CardRegistry, GamesTimer],
 })
 export class GamesModule {}
