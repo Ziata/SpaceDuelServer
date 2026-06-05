@@ -9,9 +9,13 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy to Fly
-        uses: superfly/flyctl-actions@master
-        with:
-          args: 'deploy -a server-late-sunbeam-7381'
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup flyctl
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Deploy
+        run: flyctl deploy -a server-late-sunbeam-7381
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
