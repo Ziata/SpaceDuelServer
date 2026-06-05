@@ -11,6 +11,9 @@ export class GamesTimer {
 
   start(server: Server) {
     this.server = server;
+    setInterval(() => {
+      void this.checkTurns();
+    }, 1000);
 
     // Запускаем таймер раз в секунду
     setInterval(() => {
@@ -31,10 +34,6 @@ export class GamesTimer {
         const player = game.players[game.currentPlayer];
         if (!player || !player.hand?.length) continue;
 
-        this.logger.log(
-          `Auto-discard for player ${player.id} in game ${game.id}`,
-        );
-
         // Выполняем discard через сервис
         await this.gamesService.discardCard(
           game._id.toString(),
@@ -46,6 +45,7 @@ export class GamesTimer {
         const updatedGame = await this.gamesService.findOne(
           game._id.toString(),
         );
+
         if (!updatedGame) continue;
 
         // Отправляем события всем сокетам, которые могут быть в комнате

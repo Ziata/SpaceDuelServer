@@ -1,6 +1,6 @@
 import { ICardBase } from 'src/cards/types/cards.types';
 
-export const TURN_TIME = 45000;
+export const TURN_TIME = 15000;
 
 export interface IGame {
   _id: string;

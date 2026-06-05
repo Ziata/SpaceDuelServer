@@ -94,13 +94,13 @@ export class GamesGateway {
       if (updatedGame.players.length >= 2) {
         this.server.to(payload.gameId).emit('gameStarted', {
           game: updatedGame,
-          serverNow: new Date().getTime(),
+          serverNow: Date.now(),
         });
       } else {
         // Если ещё не старт — просто обновляем игроков
         this.server.to(payload.gameId).emit('playerJoined', {
           game: updatedGame,
-          serverNow: new Date().getTime(),
+          serverNow: Date.now(),
         });
       }
     }
@@ -135,7 +135,7 @@ export class GamesGateway {
         );
         socket.emit('playCard', {
           game: serialized,
-          serverNow: new Date().getTime(),
+          serverNow: Date.now(),
         });
       }
 
@@ -179,7 +179,7 @@ export class GamesGateway {
         );
         socket.emit('discardCard', {
           game: serialized,
-          serverNow: new Date().getTime(),
+          serverNow: Date.now(),
         });
       }
 
